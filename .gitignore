@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# Generated from content/resume.md by `pnpm content:check`.
+public/resume.json
+
+# Screenshots from design review passes.
+unslop/
+unslop-story/
+
+.DS_Store
+.env*.local
