@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PAGES_ENABLEMENT_TOKEN: ${{ secrets.PAGES_ENABLEMENT_TOKEN }}
+      # Read by next.config.ts. GitHub Pages serves a project site from
+      # sinakafi.github.io/<repo>/, so assets must be emitted under that prefix.
+      NEXT_PUBLIC_BASE_PATH: /morteza-portfolio
     steps:
       - name: Checkout
         uses: actions/checkout@v6

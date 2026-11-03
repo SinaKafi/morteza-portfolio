@@ -6,7 +6,7 @@ Phone: (+98) 911-319-3375
 Email: mortezanajafiofficial@gmail.com
 GitHub: mortezanjfi
 LinkedIn: morteza-njfi
-Website: mortezanajafi.ir
+Website: sinakafi.github.io/morteza-portfolio
 
 Summary
 
