@@ -5,6 +5,10 @@ import { accent, hairline, ink, paper } from '@/lib/design/colors';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
+// Required by `output: "export"`: the card is generated from the resume at build
+// time, so the route must be declared static.
+export const dynamic = 'force-static';
+
 /**
  * Neutral on purpose: the name is carried by the page metadata. This file must
  * not restate a personal fact, and `tests/interface-guards.test.ts` enforces it.
