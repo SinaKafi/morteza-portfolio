@@ -1,0 +1,238 @@
+@import 'tailwindcss';
+
+/*
+ * Design system for a portfolio about measured systems work.
+ *
+ * Direction: ink neutrals, one cobalt accent, precision typography, and a
+ * blueprint drawing for the one moment that carries the color. Depth comes from
+ * surface steps and hairlines — never from glow, hue gradients or coloured
+ * shadows. Glass is used on three surfaces that genuinely have something behind
+ * them, not as a texture.
+ */
+
+@theme {
+  /* Ink ramp — the world is instruments and engineering drawings. */
+  --color-ink-1000: #06070b;
+  --color-ink-950: #07080d;
+  --color-ink-900: #0b0d14;
+  --color-ink-850: #11141c;
+  --color-ink-800: #1a1e28;
+  --color-ink-750: #232833;
+
+  /* Three text roles. Nothing else is a text colour. */
+  --color-paper: #eef0f5;
+  --color-paper-dim: #a3a9b8;
+  --color-paper-mute: #7a8296;
+
+  /* One accent, and a darker sibling for ink on light surfaces. */
+  --color-cobalt: #4b7bff;
+  --color-cobalt-ink: #8fb0ff;
+  --color-cobalt-deep: #2f57c9;
+
+  --color-hairline: rgb(238 240 245 / 0.08);
+  --color-hairline-strong: rgb(238 240 245 / 0.16);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'SFMono-Regular', monospace;
+
+  /* 4px scale. Every margin, padding, gap and height comes from here. */
+  --spacing: 0.25rem;
+
+  --radius-control: 8px;
+  --radius-card: 14px;
+  --radius-panel: 18px;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1rem;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.25rem;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.375rem;
+  --text-subhead: 1.125rem;
+  --text-subhead--line-height: 1.75rem;
+  --text-title: 2rem;
+  --text-title--line-height: 1.15;
+  --text-display: 4.25rem;
+  --text-display--line-height: 1.04;
+
+  --duration-feedback: 140ms;
+  --duration-menu: 200ms;
+  --duration-enter: 420ms;
+}
+
+@layer base {
+  * {
+    min-width: 0;
+  }
+
+  html {
+    background-color: var(--color-ink-900);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink-900);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-cobalt);
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 1.5px solid var(--color-cobalt-ink);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    letter-spacing: -0.035em;
+  }
+
+  @media (max-width: 640px) {
+    h1 {
+      letter-spacing: -0.02em;
+    }
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Quiet chrome: hairlines, surface steps, one accent. */
+.panel {
+  background-color: var(--color-ink-850);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-panel);
+}
+
+.panel-raised {
+  background-color: var(--color-ink-800);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-card);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+/*
+ * Glass, used deliberately: only where something real sits behind the surface.
+ * No saturation boost, no coloured tint, no glow.
+ */
+.glass {
+  background-color: rgb(17 20 28 / 0.72);
+  backdrop-filter: blur(14px) saturate(115%);
+  border: 1px solid var(--color-hairline);
+}
+
+.hairline-t {
+  border-top: 1px solid var(--color-hairline);
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* Drafting paper, at the threshold of visibility, on figures only. */
+.blueprint-grid {
+  background-image:
+    linear-gradient(to right, rgb(238 240 245 / 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(238 240 245 / 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* The signature: hairline dimension ticks with mono figures. */
+.measure {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-paper-mute);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.01em;
+}
+
+.measure::before,
+.measure::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background-color: var(--color-hairline);
+}
+
+.measure-start::before {
+  display: none;
+}
+
+/*
+ * Scroll reveal. Transform and opacity only; JS adds .is-visible.
+ *
+ * The hiding rule is gated on `html.js`, which an inline script sets before the
+ * first reveal is parsed. Without JavaScript the content simply renders — a
+ * portfolio that needs a script to show its text is not a portfolio.
+ */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity var(--duration-enter) var(--ease-out-quint),
+    transform var(--duration-enter) var(--ease-out-quint);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Magnetic controls move a few pixels at most, and only on pointer devices. */
+.magnetic {
+  transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+  transition: transform var(--duration-feedback) var(--ease-out-quint);
+  will-change: transform;
+}
+
+@media (hover: none) {
+  .magnetic {
+    transform: none;
+  }
+}
