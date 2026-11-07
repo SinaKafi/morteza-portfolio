@@ -224,15 +224,42 @@
   }
 }
 
-/* Magnetic controls move a few pixels at most, and only on pointer devices. */
-.magnetic {
-  transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
-  transition: transform var(--duration-feedback) var(--ease-out-quint);
-  will-change: transform;
+/*
+ * The magnetic controls and the figure's pointer tilt are driven by spring
+ * motion values in `components/motion`, so their transforms are inline and
+ * never shared with a CSS transition. Nothing here needs to animate them.
+ */
+
+/*
+ * Typing. The server renders the full string, so the heading is never empty
+ * while scripts load; without JavaScript the text simply stays put. The script
+ * empties only the visible copy, types it back, and fades the caret out.
+ */
+.js .typewriter-text {
+  opacity: 0;
 }
 
-@media (hover: none) {
-  .magnetic {
-    transform: none;
+.typewriter-caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 4px;
+  vertical-align: -0.08em;
+  background-color: var(--color-paper-dim);
+  opacity: 0;
+  transition: opacity var(--duration-feedback) var(--ease-out-quint);
+}
+
+.typewriter[data-typing='true'] .typewriter-caret {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .typewriter-text {
+    opacity: 1;
+  }
+
+  .typewriter-caret {
+    display: none;
   }
 }

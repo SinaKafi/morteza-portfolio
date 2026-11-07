@@ -1,6 +1,8 @@
 'use client';
 
 import { useCallback, useRef, type ReactNode } from 'react';
+import { motion, useReducedMotion, useSpring } from 'framer-motion';
+import { SPRING_MAGNET } from '@/lib/motion/config';
 
 interface MagneticLinkProps {
   href: string;
@@ -12,9 +14,12 @@ interface MagneticLinkProps {
 }
 
 /**
- * Magnetic control: the element leans towards the pointer by a few pixels and
- * returns on leave. Transform only, clamped to 4px, and switched off entirely on
- * touch devices and when reduced motion is requested.
+ * Magnetic control. The pointer sets a target a few pixels towards itself and a
+ * stiff, damped spring follows it, so the button leans into the hand rather
+ * than teleporting. On leave the springs return to rest.
+ *
+ * Transform only, capped at `strength` pixels, and switched off on touch and
+ * when reduced motion is requested.
  */
 export function MagneticLink({
   href,
@@ -24,40 +29,45 @@ export function MagneticLink({
   external = false,
 }: MagneticLinkProps) {
   const ref = useRef<HTMLAnchorElement | null>(null);
+  const reduced = useReducedMotion();
+  const x = useSpring(0, SPRING_MAGNET);
+  const y = useSpring(0, SPRING_MAGNET);
 
   const handleMove = useCallback(
     (event: React.PointerEvent<HTMLAnchorElement>) => {
       const node = ref.current;
-      if (!node || event.pointerType !== 'mouse') return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (!node || reduced || event.pointerType !== 'mouse') return;
 
       const rect = node.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
       const offsetX = (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
       const offsetY = (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
 
-      node.style.setProperty('--mx', `${(offsetX * strength).toFixed(2)}px`);
-      node.style.setProperty('--my', `${(offsetY * strength).toFixed(2)}px`);
+      x.set(offsetX * strength);
+      y.set(offsetY * strength);
     },
-    [strength],
+    [reduced, strength, x, y],
   );
 
   const handleLeave = useCallback(() => {
-    const node = ref.current;
-    if (!node) return;
-    node.style.setProperty('--mx', '0px');
-    node.style.setProperty('--my', '0px');
-  }, []);
+    x.set(0);
+    y.set(0);
+  }, [x, y]);
 
   return (
-    <a
+    <motion.a
       ref={ref}
       href={href}
-      className={className ? `magnetic ${className}` : 'magnetic'}
+      style={{ x, y }}
+      className={className}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
+      onPointerCancel={handleLeave}
+      onBlur={handleLeave}
       {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
     >
       {children}
-    </a>
+    </motion.a>
   );
 }
