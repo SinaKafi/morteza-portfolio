@@ -1,6 +1,8 @@
 import { ArrowUpRight, Mail } from 'lucide-react';
 import { CareerDrawing } from '@/components/figure/CareerDrawing';
+import { GravityTilt } from '@/components/motion/GravityTilt';
 import { Reveal } from '@/components/motion/Reveal';
+import { Typewriter } from '@/components/motion/Typewriter';
 import { PrimaryLink, SecondaryLink } from '@/components/ui/Button';
 import {
   careerSpanMonths,
@@ -11,6 +13,11 @@ import {
   publishedContacts,
 } from '@/lib/content';
 import { buildTimeline } from '@/lib/figure/timeline';
+
+/** Typing rhythm: the name, a short beat, then the title. It runs once. */
+const NAME_SPEED = 45;
+const TITLE_SPEED = 30;
+const NAME_PAUSE = 320;
 
 /**
  * The hero is a split, not a centred stack: the claim on the left, the drawing
@@ -44,10 +51,16 @@ export function Hero() {
             ) : null}
 
             <h1 className="mt-6 text-[2.5rem] leading-[1.05] tracking-[-0.03em] text-paper sm:text-[3.25rem] lg:text-[4rem]">
-              {profile.name}
+              <Typewriter text={profile.name} speed={NAME_SPEED} />
             </h1>
 
-            <p className="mt-5 text-subhead text-paper-dim">{profile.title}</p>
+            <p className="mt-5 text-subhead text-paper-dim">
+              <Typewriter
+                text={profile.title}
+                speed={TITLE_SPEED}
+                delay={profile.name.length * NAME_SPEED + NAME_PAUSE}
+              />
+            </p>
 
             {lead ? (
               <p className="mt-6 max-w-[34rem] text-body text-paper-dim">{lead}</p>
@@ -74,13 +87,15 @@ export function Hero() {
 
         <div className="lg:col-span-7">
           <Reveal delay={60}>
-            <CareerDrawing
-              timeline={timeline}
-              originLabel={earliest?.range.start.label ?? ''}
-              spanLabel={span}
-              describedBy={`Career from ${earliest?.range.start.label ?? ''} to today: ${timeline.rows
-                .length} roles across ${span}.`}
-            />
+            <GravityTilt>
+              <CareerDrawing
+                timeline={timeline}
+                originLabel={earliest?.range.start.label ?? ''}
+                spanLabel={span}
+                describedBy={`Career from ${earliest?.range.start.label ?? ''} to today: ${timeline.rows
+                  .length} roles across ${span}.`}
+              />
+            </GravityTilt>
           </Reveal>
         </div>
       </div>
